@@ -22,6 +22,7 @@
       background-color: white;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
+      max-width: 90%;
     }
 
     .emoji {
@@ -40,11 +41,7 @@
       font-weight: bold;
       color: #333;
       opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .show {
-      opacity: 1;
+      transition: opacity 0.5s ease-in-out;
     }
   </style>
 </head>
@@ -56,8 +53,7 @@
 
   <script>
     const emojis = [
-      "🍀", "🦄", "🥷", "🎩", "🦋", "🍉", "🚀", "⚡", "🐙", "🎉", "🦑", "🍕", "🏄‍♀️", "🍀", 
-      "🍇", "🍎", "🍉", "🧃", "🦋", "⚡", "🌶", "🧩", "🍪", "🥓", "🍿", "🌵", "🐉", "🐢", "🎸"
+      "🍀", "🦄", "🥷", "🎩", "🦋", "🍉", "🚀", "⚡", "🐙", "🎉", "🦑", "🍕", "🏄‍♀️", "🎭", "🎤", "🍹", "🏔️", "🎮"
     ];
 
     const dateIdeas = [
@@ -70,45 +66,35 @@
       "Essen mit verbundenen Augen erraten – einer füttert, der andere rät.",
       "In den Zug steigen und an einer random Haltestelle aussteigen.",
       "In einem Möbelhaus so tun, als würdet ihr einziehen und Fotos machen.",
-      "Kinoabend – Entweder im Kino oder mit Snacks zuhause einen Film schauen.",
-      "Spazieren gehen – Am See, im Wald oder einfach in der Stadt.",
-      "Bowling oder Minigolf spielen.",
-      "Eis essen gehen.",
-      "Sushi oder Pizza essen gehen oder bestellen.",
-      "Schwimmen gehen – Im Freibad, See oder einer Therme.",
-      "Picknick im Park.",
-      "Sonnenuntergang anschauen – Von einer Brücke, einem Berg oder einfach draußen.",
-      "Gemeinsam kochen – Lieblingsgerichte oder etwas Neues ausprobieren.",
-      "Freizeitpark oder Jahrmarkt besuchen.",
-      "Karussell oder Achterbahn fahren.",
-      "Schlittschuh laufen – Im Winter draußen oder in der Eishalle.",
-      "Go-Kart fahren.",
-      "Billard oder Darts spielen.",
-      "Brettspiele- oder Kartenabend.",
-      "Fotowalk durch die Stadt.",
-      "Bücherladen-Date – Jeder sucht ein Buch für den anderen aus.",
-      "Märkte oder Flohmärkte durchstöbern.",
-      "Tretboot oder Kanu fahren.",
-      "Café-Date – Einfach gemütlich zusammensitzen und quatschen.",
-      "Restaurant-Date – Schick essen gehen oder Fast Food holen.",
-      "Zoobesuch oder Aquarium anschauen.",
       "Sterne beobachten – Mit einer Decke draußen oder mit einer App die Sternbilder suchen."
     ];
 
-    // Funktion zum Zufallsgenerieren von Emoji und Date-Idee
     function generateRandom() {
-      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-      const randomIdea = dateIdeas[Math.floor(Math.random() * dateIdeas.length)];
+      let lastEmoji = localStorage.getItem("lastEmoji");
+      let lastIdea = localStorage.getItem("lastIdea");
+      
+      let newEmoji, newIdea;
+      do {
+        newEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+      } while (newEmoji === lastEmoji);
+      
+      do {
+        newIdea = dateIdeas[Math.floor(Math.random() * dateIdeas.length)];
+      } while (newIdea === lastIdea);
+      
+      localStorage.setItem("lastEmoji", newEmoji);
+      localStorage.setItem("lastIdea", newIdea);
 
-      document.getElementById('emoji').textContent = randomEmoji;
-      document.getElementById('date-idea').textContent = randomIdea;
-      document.getElementById('date-idea').classList.add('show');
+      const dateIdeaElement = document.getElementById('date-idea');
+      dateIdeaElement.style.opacity = 0;
+      setTimeout(() => {
+        document.getElementById('emoji').textContent = newEmoji;
+        dateIdeaElement.textContent = newIdea;
+        dateIdeaElement.style.opacity = 1;
+      }, 300);
     }
 
-    // Emoji klickbar machen
-    document.getElementById('emoji').addEventListener('click', function () {
-      generateRandom();
-    });
+    document.getElementById('emoji').addEventListener('click', generateRandom);
   </script>
 </body>
 </html>
